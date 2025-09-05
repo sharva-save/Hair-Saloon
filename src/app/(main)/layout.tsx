@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import Navbar  from '@/components/Navbar'
 import Grid  from '@/components/Grid'
-import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,8 +29,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-       <Toaster />
+       <Navbar/>
+
         {children}
+        <footer className="text-center p-4 md:p-6 bg-gray-900 text-white">
+        © 2025 True Feedback. All rights reserved.
+      </footer>
       </body>
     </html>
   );
