@@ -8,6 +8,7 @@ import InfiniteMovingCard from "@/components/InfiniteMovingCard";
 import FocusCards from "@/components/FocusCards";
 import Card from "@/components/Card";
 import { useEffect, useState } from "react";
+import { FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
 
 
@@ -16,6 +17,8 @@ export default function Home() {
   const [projects, setProjects] = useState();
   const [slider, setSlider] = useState();
   const [testimonials, setTestimonials] = useState();
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -427,7 +427,7 @@ const page = () => {
       </div>
     </div>
 
-    <div className="bg-gray-800 text-gray-50">
+    <div className="bg-black text-gray-50">
       {/* Header */}
       
 
@@ -435,7 +435,7 @@ const page = () => {
       <section className="py-16 px-6 md:px-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div className="bg-gray-800 shadow-lg rounded-2xl p-8">
+          <div className="bg-black shadow-lg rounded-2xl p-8">
             <h2 className=" text-2xl font-semibold mb-6">Send Us a Message</h2>
             <form className="space-y-5">
               <div>

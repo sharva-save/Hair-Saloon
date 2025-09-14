@@ -1,7 +1,7 @@
 import dbConnect from "@/app/lib/dbConnect";
 import userModel from "@/app/model/userModel";
-import { success } from "zod";
 import bcrypt from "bcrypt";
+
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     const { email, password } = await request.json();
 
     const user = await userModel.findOne({ email });
+
     if (!user) {
       return Response.json(
         { success: false, message: " user not found " },
@@ -29,8 +30,32 @@ export async function POST(request: Request) {
       );
     }
 
+    const genrateAccessAndRefreshToken = async (userId: string) => {
+        const user = await userModel.findById(userId);
+
+        if (!user) {
+          return Response.json(
+            { success: false, message: " user ID not found " },
+            {
+              status: 200,
+            }
+          );
+        }
+        const refreshToken = user.generateRefreshToken();
+        const accessToken = user.generateAccessToken();
+        user.refreshToken = refreshToken;
+
+        await user.save({ validateBeforeSave: false });
+
+        return { accessToken, refreshToken };
+    };
+
+     const { accessToken, refreshToken } =
+      await genrateAccessAndRefreshToken(user._id);
+
     return Response.json(
-      { success: true, message: "Login SuccessfullyAA" },
+      { success: true, message: "Login Successfully",  accessToken,
+        refreshToken, },
       {
         status: 200,
       }
@@ -40,7 +65,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: false,
-        message: "error in the login api",
+        message: error instanceof Error ? error.message : "error in the login api",
       },
       {
         status: 400,

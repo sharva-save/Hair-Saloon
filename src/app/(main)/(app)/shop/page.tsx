@@ -1,10 +1,24 @@
 "use client";
-
 import React, { JSX, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 
+import { Label } from "@/components/ui/label";
+
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Card {
   title: string;
@@ -13,9 +27,9 @@ interface Card {
   content?: () => JSX.Element;
 }
 
-
 const page = () => {
   const [datas, setdatas] = useState<Card[]>([]);
+  const [open, setOpen] = useState(false);
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -30,6 +44,7 @@ const page = () => {
     };
     fetchData();
   }, []);
+  const router = useRouter();
 
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null
@@ -52,7 +67,7 @@ const page = () => {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [active]);
 
-  useOutsideClick(ref, () => setActive(null));
+  useOutsideClick(ref, () => setActive(null), ["#checkout-btn"]);
 
   return (
     <>
@@ -121,17 +136,12 @@ const page = () => {
                     </motion.p>
                   </div>
 
-                  <motion.a
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    href={active.ctaLink}
-                    target="_blank"
+                  <motion.button
+                    onClick={() => setOpen(true)}
                     className="px-4 py-3 text-sm/6 rounded-full font-bold bg-green-500 text-white"
                   >
                     Book Appoiment Now
-                  </motion.a>
+                  </motion.button>
                 </div>
                 <div className="pt-4 relative px-4">
                   <motion.div
@@ -187,6 +197,64 @@ const page = () => {
           </motion.div>
         ))}
       </ul>
+
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>
+              {active && typeof active === "object"
+                ? active.title
+                : "No Card Selected"}
+            </SheetTitle>
+            <SheetDescription>
+              {active && typeof active === "object"
+                ? active.description
+                : "Select a card to see details"}
+            </SheetDescription>
+          </SheetHeader>
+
+          {active && typeof active === "object" && (
+            <div className="grid flex-1 auto-rows-min gap-6 px-4">
+              <div className="grid gap-3">
+                <Label>Image</Label>
+                <img
+                  src={active.img}
+                  alt={active.title}
+                  className="h-64 w-full object-cover rounded-lg"
+                />
+              </div>
+
+              <div className="gap-3 flex justify-center ">
+                <Label className="text-2xl text-green-600">Price </Label>
+                <h3 className="text-2xl">{active.price}</h3>
+              </div>
+            </div>
+          )}
+
+          <SheetFooter>
+            {/* Checkout will not close the sheet anymore */}
+            <motion.button
+              className="bg-green-400 p-4 rounded-full"
+              id="checkout-btn"
+              type="button"
+              onClick={() => {
+                if (active && typeof active === "object") {
+                  const url = `/cart?data=${encodeURIComponent(JSON.stringify(active))}`;
+                  console.log("Navigating to cart with:", active);
+                  router.replace(url); // navigate programmatically
+                }
+              }}
+            >
+              ADD TO CART
+            </motion.button>
+
+            {/* Only this button will close the sheet */}
+            <SheetClose asChild>
+              <Button variant="outline">Close</Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };
@@ -224,5 +292,5 @@ export const CloseIcon = () => {
     </motion.svg>
   );
 };
- 
 
+// https://ui.shadcn.com/docs/components/sheet

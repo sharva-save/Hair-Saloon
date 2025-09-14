@@ -26,7 +26,7 @@ function NavbarDemo({ className }: { className?: string }) {
       className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}
     >
       <Menu setActive={setActive}>
-        <Link href={'/'}>
+        <Link href={"/"}>
           <MenuItem
             setActive={setActive}
             active={active}
@@ -34,32 +34,45 @@ function NavbarDemo({ className }: { className?: string }) {
           ></MenuItem>
         </Link>
 
-        <Link href={'/about'}>
-        <MenuItem setActive={setActive} active={active} item="About"></MenuItem>
+        <Link href={"/about"}>
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item="About"
+          ></MenuItem>
         </Link>
 
-        <Link href={'/contact'}>
-        <MenuItem
-          setActive={setActive}
-          active={active}
-          item="Contact"
-        ></MenuItem>
+        <Link href={"/contact"}>
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item="Contact"
+          ></MenuItem>
         </Link>
 
-        <Link href={'/Login'}>
-        <MenuItem setActive={setActive} active={active} item="Login"></MenuItem>
+        <Link href={"/Login"}>
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item="Login"
+          ></MenuItem>
         </Link>
 
-        <Link href={'/shop'}>
-        <MenuItem setActive={setActive} active={active} item="Shop"></MenuItem>
+        <Link href={"/shop"}>
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item="Shop"
+          ></MenuItem>
         </Link>
 
-        <Link href={'/cart'}>
-       <FaCartPlus className="h-5 w-5 pl-10 " />
+        <Link href={"/cart"}>
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item={<FaCartPlus className="h-7 w-7" />}
+          />
         </Link>
-
-
-       
       </Menu>
     </div>
   );

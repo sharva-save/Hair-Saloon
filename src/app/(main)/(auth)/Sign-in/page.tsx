@@ -19,25 +19,42 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+
 const page = () => {
   const router = useRouter();
+
   const form = useForm<z.infer<typeof SignInSchems>>({
     resolver: zodResolver(SignInSchems),
     defaultValues: {
       name: "",
       email: "",
       password: "",
+      isAdmin: false,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof SignInSchems>) => {
-
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
     try {
       const response: any = await axios.post("/api/SignIn", data);
-      console.log("asaaa",response);
-      
       toast(response.data.message);
-      router.replace('/Login')
+      console.log(response);
+
+      if (await response.data.success === true) {
+        const emailToSend = data.isAdmin
+        ? "sharvasave2509@gmail.com"
+        : data.email;
+      router.push(`/OTP?email=${encodeURIComponent(emailToSend)}`);
+      }
+      
+      router.push("/Login");
+
+      // Determine which email to send to OTP page
     } catch (error) {
       console.error("Error in signup of user", error);
     }
@@ -92,11 +109,38 @@ const page = () => {
                 </FormItem>
               )}
             />
+
+            {/* Admin Checkbox */}
+            <FormField
+              control={form.control}
+              name="isAdmin"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center space-x-2">
+                    <FormControl>
+                      <Checkbox
+                        id="isAdmin"
+                        checked={field.value}
+                        onCheckedChange={(checked) =>
+                          field.onChange(checked === true)
+                        }
+                      />
+                    </FormControl>
+                    <FormLabel htmlFor="isAdmin">You Are Admin</FormLabel>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit">Submit</Button>
 
             <p className="text-center">
-              Already have an Account  ?
-              <Link className="text-blue-500 hover:text-blue-800" href={"/Login"}>
+              Already have an Account ?
+              <Link
+                className="text-blue-500 hover:text-blue-800"
+                href={"/Login"}
+              >
                 Login
               </Link>
             </p>
