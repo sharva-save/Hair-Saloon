@@ -1,15 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import {
-  HoveredLink,
+
   Menu,
   MenuItem,
-  ProductItem,
 } from "@/components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
-import Slider from "@/components/Slider";
 import Link from "next/link";
-import { FaCartPlus } from "react-icons/fa";
 
 const Navbar = () => {
   return (
@@ -66,13 +63,7 @@ function NavbarDemo({ className }: { className?: string }) {
           ></MenuItem>
         </Link>
 
-        <Link href={"/cart"}>
-          <MenuItem
-            setActive={setActive}
-            active={active}
-            item={<FaCartPlus className="h-7 w-7" />}
-          />
-        </Link>
+        
       </Menu>
     </div>
   );

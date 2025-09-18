@@ -44,15 +44,14 @@ const page = () => {
       const response: any = await axios.post("/api/SignIn", data);
       toast(response.data.message);
       console.log(response);
-
-      if (await response.data.success === true) {
+      if (response.data.success) {
         const emailToSend = data.isAdmin
-        ? "sharvasave2509@gmail.com"
-        : data.email;
-      router.push(`/OTP?email=${encodeURIComponent(emailToSend)}`);
+          ? "sharvasave2509@gmail.com"
+          : data.email;
+        router.push(`/OTP?email=${encodeURIComponent(emailToSend)}`);
+      } else {
+        router.push("/Login");
       }
-      
-      router.push("/Login");
 
       // Determine which email to send to OTP page
     } catch (error) {

@@ -37,14 +37,13 @@ const page = () => {
       if (response.data.success) {
         toast.success("Login Successful");
         router.replace("/shop");
-        // router.replace("/OTP");
+        
       } else {
         toast.error(response.data.message || "Login failed ❌");
       }
 
       console.log("response from the backend", response);
-      // const emailToSend = data.email;
-      // router.push(`/OTP?email=${encodeURIComponent(emailToSend)}` );
+     
       console.log("form data", data);
     } catch (error: any) {
   if (axios.isAxiosError(error)) {

@@ -43,7 +43,7 @@ const Page = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-        router.push("/shop"); // redirect after success
+        router.push("/Login"); 
       } else {
         toast.error(response.data.message);
       }

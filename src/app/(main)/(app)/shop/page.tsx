@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-
+import Cookies from "js-cookie"
 import { Label } from "@/components/ui/label";
 
 import {
@@ -30,6 +30,7 @@ interface Card {
 const page = () => {
   const [datas, setdatas] = useState<Card[]>([]);
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -45,6 +46,15 @@ const page = () => {
     fetchData();
   }, []);
   const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+
+    if (!token) {
+      setIsLoggedIn(false); 
+      return;
+    }
+  }, []);
 
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null
@@ -69,6 +79,21 @@ const page = () => {
 
   useOutsideClick(ref, () => setActive(null), ["#checkout-btn"]);
 
+  if (!isLoggedIn) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold text-red-500">
+          Please login to view the shop
+        </h1>
+        <button
+          onClick={() => router.push("/Login")}
+          className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
   return (
     <>
       <AnimatePresence>
