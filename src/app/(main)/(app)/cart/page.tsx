@@ -1,8 +1,11 @@
-// src/app/(main)/(app)/cart/page.tsx
-import React from "react";
+"use client"; // MUST be first line
+import React, { Suspense } from "react";
 import ClientCart from "./ClientCart";
 
 export default function CartPage() {
-  // Simply render the client cart component
-  return <ClientCart />;
+  return (
+    <Suspense fallback={<div className="mt-28 text-center text-xl">Loading...</div>}>
+      <ClientCart />
+    </Suspense>
+  );
 }
