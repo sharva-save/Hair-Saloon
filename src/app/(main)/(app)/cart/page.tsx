@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const steps = ["Login", "Order Summary"];
     const router = useRouter();
   const searchParams = useSearchParams();
@@ -126,4 +126,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

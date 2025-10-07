@@ -27,7 +27,7 @@ interface Card {
   content?: () => JSX.Element;
 }
 
-const page = () => {
+const Page = () => {
   const [datas, setdatas] = useState<Card[]>([]);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
@@ -283,7 +283,7 @@ const page = () => {
     </>
   );
 };
-export default page;
+export default Page;
 
 export const CloseIcon = () => {
   return (

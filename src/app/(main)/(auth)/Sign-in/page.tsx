@@ -23,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof SignInSchems>>({
@@ -150,4 +150,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

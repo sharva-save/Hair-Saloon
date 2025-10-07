@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { log } from "console";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -111,4 +111,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
