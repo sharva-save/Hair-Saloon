@@ -1,45 +1,48 @@
-"use client";
-export const dynamic = "force-dynamic";
+"use client"; // MUST be the first line
+export const dynamic = "force-dynamic"; // ensures no prerendering
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import { useRouter, useSearchParams } from "next/navigation";
-
-import { ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDownIcon } from "lucide-react";
 
-// Define type for cart data
-interface CartData {
-  title: string;
-  description: string;
-  price: number;
-  img?: string;
-}
-
-interface CartPageProps {
-  cartData: CartData | null;
-}
-
-const CartPageClient: React.FC<CartPageProps> = ({ cartData }) => {
+const CartPage = () => {
   const steps = ["Login", "Order Summary"];
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [open, setOpen] = useState(false);
+  const [cardData, setCardData] = useState<any>(null);
 
-  if (!cartData)
+  // Get data from query params
+  useEffect(() => {
+    const dataString = searchParams.get("data");
+    if (dataString) {
+      try {
+        const parsedData = JSON.parse(dataString);
+        setCardData(parsedData);
+      } catch (err) {
+        console.error("Invalid card data in query params:", err);
+      }
+    }
+  }, [searchParams]);
+
+  if (!cardData) {
     return (
       <div className="mt-28 text-center text-xl">
         You don't have any item in the cart
       </div>
     );
+  }
 
   return (
     <div className="mt-28 px-4">
@@ -58,22 +61,21 @@ const CartPageClient: React.FC<CartPageProps> = ({ cartData }) => {
       <div className="flex flex-col md:flex-row gap-8 justify-center p-4">
         {/* Card Details */}
         <div className="flex-1">
-          <h2 className="text-2xl font-bold">{cartData.title}</h2>
-          <p>{cartData.description}</p>
-          {cartData.img && (
+          <h2 className="text-2xl font-bold">{cardData.title}</h2>
+          <p>{cardData.description}</p>
+          {cardData.img && (
             <img
-              src={cartData.img}
-              alt={cartData.title}
+              src={cardData.img}
+              alt={cardData.title}
               className="h-64 w-full object-cover rounded-lg my-4"
             />
           )}
-          <h3 className="text-xl text-green-600">Price: {cartData.price}</h3>
+          <h3 className="text-xl text-green-600">Price: {cardData.price}</h3>
 
           <Button
             onClick={() => {
-              // Redirect to payment with cart data as query
               const query = new URLSearchParams({
-                data: JSON.stringify(cartData),
+                data: JSON.stringify(cardData),
               });
               router.replace(`/payment?${query.toString()}`);
             }}
@@ -101,10 +103,7 @@ const CartPageClient: React.FC<CartPageProps> = ({ cartData }) => {
                     <ChevronDownIcon />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent
-                  className="w-auto overflow-hidden p-0"
-                  align="start"
-                >
+                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={date}
@@ -135,23 +134,6 @@ const CartPageClient: React.FC<CartPageProps> = ({ cartData }) => {
       </div>
     </div>
   );
-};
-
-// Page wrapper: extract cart data from search params **only on server**
-const CartPage = () => {
-  const searchParams = useSearchParams();
-  const dataString = searchParams.get("data");
-
-  let cartData: CartData | null = null;
-  if (dataString) {
-    try {
-      cartData = JSON.parse(dataString);
-    } catch (err) {
-      console.error("Invalid cart data:", err);
-    }
-  }
-
-  return <CartPageClient cartData={cartData} />;
 };
 
 export default CartPage;
